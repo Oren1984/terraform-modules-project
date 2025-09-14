@@ -50,13 +50,13 @@ How it’s structured
 └─ modules/
    ├─ s3-basic/         # S3 module (minimal)
    │  ├─ main.tf variables.tf outputs.tf README.md
-   │  └─ evidence/      # small proof files (e.g., outputs.json)
+   │ 
    ├─ vpc-basic/        # VPC module (minimal public-only)
    │  ├─ main.tf variables.tf outputs.tf README.md
-   │  └─ evidence/
+   │  
    └─ ec2-web/          # EC2 + Nginx + optional CPU alarm
       ├─ main.tf variables.tf outputs.tf README.md
-      └─ evidence/
+      
 
 
 Each module keeps inputs small and outputs useful so modules compose easily in main.tf.
@@ -65,7 +65,5 @@ Each module keeps inputs small and outputs useful so modules compose easily in m
 Notes
 
 No hard-coding: AMI via SSM, CIDRs/tags via variables.
-
-evidence/ per module is safe to commit (small text/JSON).
 
 State/plan files are ignored by git (see .gitignore).
