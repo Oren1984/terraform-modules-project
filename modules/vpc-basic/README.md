@@ -28,6 +28,4 @@ module "vpc" {
   public_subnet_cidr = "10.0.1.0/24"
   tags               = var.project_tags
 }
-Evidence
-Small proof files live under modules/vpc-basic/evidence/
-(e.g., vpc_id.txt, public_subnet_id.txt, outputs.json).
+
