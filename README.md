@@ -98,3 +98,4 @@ Each module includes its own outputs.tf file with verified plan results.
 
 ✅ Infrastructure configuration verified successfully (logical validation only).
 
+--
