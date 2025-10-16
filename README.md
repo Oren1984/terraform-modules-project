@@ -26,6 +26,7 @@ terraform validate
 terraform plan -out=tfplan.bin
 terraform apply tfplan.bin
 
+---
 
 Outputs you’ll see:
 
@@ -39,6 +40,7 @@ Clean up:
 
 terraform destroy -auto-approve
 
+---
 
 How it’s structured
 .
@@ -61,9 +63,38 @@ How it’s structured
 
 Each module keeps inputs small and outputs useful so modules compose easily in main.tf.
 
+---
 
 Notes
 
 No hard-coding: AMI via SSM, CIDRs/tags via variables.
 
 State/plan files are ignored by git (see .gitignore).
+
+---
+
+## 🧪 Infrastructure Validation
+
+All Terraform modules (**S3**, **VPC**, **EC2**) were validated locally using the following steps:
+
+```bash
+terraform fmt -recursive
+terraform init
+terraform validate
+terraform plan -out=tfplan.bin
+terraform destroy -auto-approve
+
+---
+
+Validation confirmed:
+
+All modules compiled and passed syntax/dependency checks.
+
+terraform plan generated expected infrastructure changes without errors.
+
+No real apply was executed — to avoid AWS resource costs.
+
+Each module includes its own outputs.tf file with verified plan results.
+
+✅ Infrastructure configuration verified successfully (logical validation only).
+
