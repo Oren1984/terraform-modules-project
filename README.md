@@ -1,101 +1,83 @@
-# terraform-modules-project
+# Terraform Modules Project
 
-# Terraform Modules Project — S3 + VPC + EC2 (Minimal)
+Minimal Terraform project combining reusable AWS modules for S3, VPC, and EC2.
 
-A small, junior-friendly Terraform project with **three minimal modules** combined into one stack:
-- **s3-basic** — S3 bucket with Versioning + Lifecycle to Glacier IR (days configurable).
-- **vpc-basic** — Minimal VPC with one public subnet, IGW, route table + default route.
-- **ec2-web** — Small EC2 (AL2023 via SSM), Nginx “Hello” page, optional CPU>70% CloudWatch alarm.
+---
 
-No hard-coding: AMI via SSM Parameter, CIDRs and tags as inputs, randomized S3 suffix, outputs for composition.
+## Overview
+
+A small Terraform lab that demonstrates how to build a simple AWS stack using three modular components: S3, VPC, and EC2.
+
+---
+
+## Tech Stack
+
+- Terraform
+- AWS
+- EC2
+- VPC
+- S3
+- CloudWatch
 
 ---
 
 ## Quick Start
 
-Prereqs:
-- Terraform (>= 1.5 recommended)
-- AWS account & credentials configured (e.g., `aws configure`)
-- Region set in `providers.tf` or via env var `AWS_REGION`
-
-Run from repo root:
 ```bash
 terraform fmt -recursive
 terraform init
 terraform validate
 terraform plan -out=tfplan.bin
 terraform apply tfplan.bin
+```
+
+---
+## Usage
+
+This project provisions:
+
+- S3 bucket with versioning and lifecycle policy
+
+- Minimal VPC with one public subnet
+
+- EC2 instance with Nginx demo page
+
+- Optional CloudWatch CPU alarm
+
+Common outputs:
+
+- vpc_id
+
+- public_subnet_id
+
+- ec2_instance_id
+
+- ec2_public_ip
+
+- ec2_sg_id
+
+- ec2_cpu_alarm
+
+- s3_bucket_name
 
 ---
 
-Outputs you’ll see:
-
-vpc_id, public_subnet_id
-
-ec2_instance_id, ec2_public_ip, ec2_sg_id, ec2_cpu_alarm
-
-s3_bucket_name
-
-Clean up:
-
-terraform destroy -auto-approve
-
----
-
-How it’s structured
-.
-├─ main.tf              # final stack: VPC + EC2 + S3
-├─ providers.tf         # AWS provider + region
-├─ versions.tf          # terraform & provider version constraints
-├─ variables.tf         # shared inputs (e.g., tags)
-├─ outputs.tf           # (few root outputs; most are module outputs)
-└─ modules/
-   ├─ s3-basic/         # S3 module (minimal)
-   │  ├─ main.tf variables.tf outputs.tf README.md
-   │ 
-   ├─ vpc-basic/        # VPC module (minimal public-only)
-   │  ├─ main.tf variables.tf outputs.tf README.md
-   │  
-   └─ ec2-web/          # EC2 + Nginx + optional CPU alarm
-      ├─ main.tf variables.tf outputs.tf README.md
-      
-
-
-Each module keeps inputs small and outputs useful so modules compose easily in main.tf.
-
----
-
-Notes
-
-No hard-coding: AMI via SSM, CIDRs/tags via variables.
-
-State/plan files are ignored by git (see .gitignore).
-
----
-
-## 🧪 Infrastructure Validation
-
-All Terraform modules (**S3**, **VPC**, **EC2**) were validated locally using the following steps:
+## Cleanup
 
 ```bash
-terraform fmt -recursive
-terraform init
-terraform validate
-terraform plan -out=tfplan.bin
 terraform destroy -auto-approve
+```
 
 ---
 
-Validation confirmed:
+## Notes
 
-All modules compiled and passed syntax/dependency checks.
+- Built for learning and modular Terraform practice
 
-terraform plan generated expected infrastructure changes without errors.
+- Uses reusable modules under modules/
 
-No real apply was executed — to avoid AWS resource costs.
+- AMI is resolved via SSM, with no hard-coded values
 
-Each module includes its own outputs.tf file with verified plan results.
+- Validation was completed locally before deployment
 
-✅ Infrastructure configuration verified successfully (logical validation only).
-
---
+---
