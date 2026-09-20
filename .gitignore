@@ -1,11 +1,21 @@
 .terraform/
 *.tfstate
 *.tfstate.*
-terraform.tfvars
-*.auto.tfvars
+*.tfvars
+*.tfvars.json
 tfplan.bin
-.crash
+*tfplan*
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

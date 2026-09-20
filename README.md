@@ -2,34 +2,26 @@
 
 Modular Terraform project for provisioning a small AWS environment using reusable infrastructure modules.
 
-## Overview
+## What
 
-This project demonstrates a clean and reusable Terraform structure built from three independent AWS modules:
-
-- S3
-- VPC
-- EC2
-
-The root configuration connects the modules and exposes the main infrastructure outputs.
-
-## Architecture
-
-The project provisions:
+This project provisions a small AWS environment from three independent, reusable modules:
 
 - An S3 bucket with versioning and lifecycle configuration
 - A minimal VPC with a public subnet
-- An EC2 instance running an Nginx demonstration page
-- A security group for the EC2 instance
-- An optional CloudWatch CPU alarm
+- An EC2 instance running an Nginx demonstration page, with a security group and an optional CloudWatch CPU alarm
 
-## Project Structure
+The root configuration ([`main.tf`](main.tf)) connects these modules and exposes the resulting infrastructure IDs as outputs.
 
 ```text
 terraform-modules-project/
 ├── modules/
-│   ├── s3/
-│   ├── vpc/
-│   └── ec2/
+│   ├── vpc-basic/
+│   ├── ec2-web/
+│   └── s3-basic/
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── USAGE.md
+│   └── SECURITY.md
 ├── main.tf
 ├── providers.tf
 ├── variables.tf
@@ -38,107 +30,41 @@ terraform-modules-project/
 ├── .terraform.lock.hcl
 └── README.md
 ```
----
 
-## Tech Stack
-- Terraform
-- AWS
-- Amazon EC2
-- Amazon VPC
-- Amazon S3
-- Amazon CloudWatch
+## Why
 
----
+This project was built as a hands-on Terraform portfolio piece demonstrating:
 
-## Prerequisites
+- Reusable module design (network, compute, and storage kept independent)
+- Root-module composition instead of a single monolithic configuration
+- Input variables and outputs used for composition, not hard-coded values
+- AWS provider configuration and pinned version constraints
+- Safe Git practices around state and secrets (see [`docs/SECURITY.md`](docs/SECURITY.md))
 
-Before running the project, make sure the following are available:
+## How
 
-- Terraform installed
-- AWS CLI installed
-- AWS credentials configured locally
-- An AWS account with the required permissions
+**Tech stack:** Terraform, AWS (VPC, EC2, S3, CloudWatch)
 
-Verify AWS access:
-
-```bash
-aws sts get-caller-identity
-```
-
----
-
-## Usage
-
-Format and initialize the project:
+**Quick start:**
 
 ```bash
 terraform fmt -recursive
 terraform init
-```
-
-Validate the configuration:
-
-```bash
 terraform validate
-```
-
-Create an execution plan:
-
-```bash
 terraform plan -out=tfplan.bin
+terraform apply tfplan.bin
 ```
 
-Apply the saved plan:
-
-```bash
-terraform apply tfplan.bin
-``
-
----
-
-## Outputs
-
-The root module exposes outputs such as:
-
-- vpc_id
-- public_subnet_id
-- ec2_instance_id
-- ec2_public_ip
-- ec2_sg_id
-- ec2_cpu_alarm
-- s3_bucket_name
-
----
-
-## Cleanup
-
-Destroy all infrastructure created by the project:
+**Cleanup:**
 
 ```bash
 terraform destroy -auto-approve
 ```
 
----
+See the `docs/` folder for details:
 
-## Security Notes
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — what each module does and how they compose
+- [`docs/USAGE.md`](docs/USAGE.md) — full command walkthrough, prerequisites, and output reference
+- [`docs/SECURITY.md`](docs/SECURITY.md) — how state, secrets, and credentials are kept out of version control
 
-- Terraform state files are excluded from Git.
-- Variable files such as terraform.tfvars are excluded to prevent accidental secret exposure.
-- AWS credentials must not be stored in the repository.
-- The AMI is resolved dynamically through AWS Systems Manager Parameter Store instead of being hard-coded.
-
----
-
-## Purpose
-
-This project was created as a hands-on Terraform portfolio project demonstrating:
-
-- Reusable module design
-- Root-module composition
-- Input variables and outputs
-- AWS provider configuration
-- Infrastructure validation
-- Safe Git repository practices
-
----
-
+Each module also has its own reference doc: [`modules/README.md`](modules/README.md), [`modules/vpc-basic/README.md`](modules/vpc-basic/README.md), [`modules/ec2-web/README.md`](modules/ec2-web/README.md), [`modules/s3-basic/README.md`](modules/s3-basic/README.md).
