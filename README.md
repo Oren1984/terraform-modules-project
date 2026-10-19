@@ -12,6 +12,42 @@ This project provisions a small AWS environment from three independent, reusable
 
 The root configuration ([`main.tf`](main.tf)) connects these modules and exposes the resulting infrastructure IDs as outputs.
 
+```mermaid
+flowchart TD
+    vars["variables.tf<br/>project_tags"] --> root["Root module<br/>main.tf"]
+    prov["providers.tf / versions.tf<br/>AWS + random providers"] --> root
+
+    root --> vpc
+    root --> ec2
+    root --> s3
+
+    subgraph vpc["module.vpc (vpc-basic)"]
+        v1["aws_vpc<br/>10.0.0.0/16"] --> v2["aws_subnet (public)<br/>10.0.1.0/24"]
+        v1 --> v3["aws_internet_gateway"]
+        v3 --> v4["aws_route_table<br/>+ 0.0.0.0/0 route"]
+        v4 --> v5["route_table_association"]
+        v2 --> v5
+    end
+
+    subgraph ec2["module.ec2 (ec2-web)"]
+        e1["aws_ssm_parameter<br/>AL2023 AMI"] --> e3["aws_instance<br/>t3.micro + Nginx"]
+        e2["aws_security_group"] --> e3
+        e3 --> e4["aws_cloudwatch_metric_alarm<br/>CPU > 70%"]
+    end
+
+    subgraph s3["module.s3 (s3-basic)"]
+        s1["random_pet suffix"] --> s2["aws_s3_bucket<br/>oren-modules-demo-*"]
+        s2 --> s3v["versioning"]
+        s2 --> s4["lifecycle<br/>Glacier after 30 days"]
+    end
+
+    v2 -- "public_subnet_id" --> e3
+
+    vpc --> out["Root outputs<br/>vpc_id, public_subnet_id,<br/>ec2_instance_id, ec2_public_ip,<br/>ec2_cpu_alarm, s3_bucket_name"]
+    ec2 --> out
+    s3 --> out
+```
+
 ```text
 terraform-modules-project/
 ├── modules/
